@@ -7,7 +7,7 @@ name = "genwatch"
 version = "0.1.0"
 description = "Decorator for tracing Python generator internals"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 authors = [
   { name="Azema Shaik"}
 ]
