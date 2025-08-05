@@ -9,12 +9,7 @@ class _ProxyReporter:
         self._logger = logger 
         self._attrs = attrs
 
-
-    def __call__(self):
-        return iter(self)
-
     
-
     def __iter__(self):
         class_name = self.__class__.__name__
         self._logger.info(self.__name__)
@@ -56,7 +51,7 @@ class _ProxyReporter:
                         sub_gen_name = self._gen.gi_yieldfrom.__class__.__name__
                         self._logger.info(f'Yielding from iterator: {sub_gen_name}')
                     else:
-                        sub_gen_name = self._gen.gi_yieldfrom.gi_frame.f_locals['self']._gen.__qualname__ if self._gen.gi_yieldfrom.gi_code.co_qualname == f'{class_name}.__iter__' else self._gen.gi_yieldfrom.__name__
+                        sub_gen_name = self._gen.gi_yieldfrom.gi_frame.f_locals['self']._gen.__name__ if self._gen.gi_yieldfrom.gi_code.co_qualname == f'{class_name}.__iter__' else self._gen.gi_yieldfrom.__name__
                         self._logger.info(f'Entered subgenerator: {sub_gen_name}')
                     
                 
@@ -118,7 +113,8 @@ class Reporter:
         strm_hdlr = logging.StreamHandler()
         strm_hdlr.setLevel(logging.DEBUG)
         strm_hdlr.setFormatter(logging.Formatter(fmt="[%(asctime)s]: [%(name)s]: [%(funcName)s]: [%(lineno)d]: [%(msg)s]"))
-        logger.addHandler(strm_hdlr)
+        if not logger.handlers:
+            logger.addHandler(strm_hdlr)
         return logger
     
     def __call__(self,*args,**kwargs):
@@ -134,5 +130,5 @@ class Reporter:
             lambda x: x.startswith('gi'), dir(gen)
         )) 
         proxy_obj = _ProxyReporter(gen, self.logger, attrs)
-        return proxy_obj()
+        return iter(proxy_obj)
     

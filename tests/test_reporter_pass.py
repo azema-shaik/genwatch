@@ -189,4 +189,4 @@ def test_proxy_unwrap_when_sub_is_decorated(caplog):
         next(it)
 
     # Ensure we saw sub_wrapped by name (not ProxyReporter.__iter__)
-    assert any("Entered subgenerator: sub_wrapped" in rec.message for rec in caplog.records)
+    assert any("Entered subgenerator: sub_wrapped" == rec.message for rec in caplog.records)
