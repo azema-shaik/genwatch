@@ -8,9 +8,7 @@ version = "0.1.0"
 description = "Decorator for tracing Python generator internals"
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [
-  { name="Azema Shaik"}
-]
+authors = [{ name="Azema Shaik"}]
 license = "Apache-2.0"
 keywords = ["generator", "tracing", "decorator"]
 
@@ -18,14 +16,10 @@ keywords = ["generator", "tracing", "decorator"]
 Homepage = "https://github.com/azema-shaik/genwatch"
 
 [project.optional-dependencies]
-test = [
-  "pytest>=7.0",
-]
+test = ["pytest>=7.0",]
 
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "-ra -q"
-testpaths = [
-  "tests",
-]
+testpaths = ["tests"]
 pythonpath = ["src"]
