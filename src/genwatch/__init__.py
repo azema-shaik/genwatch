@@ -1,0 +1,1 @@
+from .reporter import Reporter as GeneratorReporter
