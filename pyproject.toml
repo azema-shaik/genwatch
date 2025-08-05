@@ -9,7 +9,7 @@ description = "Decorator for tracing Python generator internals"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name="Azema Shaik"}]
-license = "Apache-2.0"
+license = {file = "LICENSE"}
 keywords = ["generator", "tracing", "decorator"]
 
 [project.urls]
