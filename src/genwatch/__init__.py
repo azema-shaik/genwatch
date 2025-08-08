@@ -1,3 +1,5 @@
-from .reporter import Reporter as GeneratorReporter
+from ._generator_reporter import Reporter as GeneratorReporter
 
 __version__ = "0.1.0"
+
+__all__ = ["GeneratorReporter"]

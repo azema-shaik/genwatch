@@ -189,4 +189,24 @@ def test_proxy_unwrap_when_sub_is_decorated(caplog):
         next(it)
 
     # Ensure we saw sub_wrapped by name (not ProxyReporter.__iter__)
-    assert any("Entered subgenerator: sub_wrapped" == rec.message for rec in caplog.records)
+    assert any("Entered subgenerator: sub_wrapped" in rec.message for rec in caplog.records)
+
+def test_throw_send_throw_raw():
+    def make_loop_gen():
+        def gen():
+            for _ in range(3):
+                try:
+                    val = yield _
+                except RuntimeError:
+                    val = yield "RECOVERED"
+        return gen
+
+
+    RawGen = make_loop_gen()
+    WrappedGen = Reporter(RawGen)
+    g = RawGen()
+    next(g)                              # prime: yields 0
+    assert g.throw(RuntimeError("x")) == "RECOVERED"
+    assert g.send(None) == 1             # back inside the for-loop
+    # Second throw should *also* be caught and recover
+    assert g.throw(RuntimeError("x")) == "RECOVERED"

@@ -49,3 +49,30 @@ def test_iterator_locals_are_logged(caplog):
 
     # Current implementation explicitly logs that iterators have no locals
     assert any("Locals of" in rec.message for rec in caplog.records)
+
+@pytest.mark.xfail(strict=True, reason="Proxy yields outside try; second throw bubbles out")
+def test_throw_send_throw_wrapped():
+    
+    def gen():
+        for _ in range(3):
+            try:
+                val = yield _
+            except RuntimeError:
+                val = yield "RECOVERED"
+        
+
+
+    RawGen = gen
+    WrappedGen = Reporter(RawGen)
+    g = RawGen()
+    next(g)                              # prime
+    assert g.throw(RuntimeError("x")) == "RECOVERED"
+    assert g.send(None) == 1
+    # This triggers the issue: should recover but currently raises RuntimeError
+    assert g.throw(RuntimeError("x")) == "RECOVERED"
+
+    g = WrappedGen()
+    assert g.throw(RuntimeError("x")) == "RECOVERED"
+    assert g.send(None) == 1
+    # This triggers the issue: should recover but currently raises RuntimeError
+    assert g.throw(RuntimeError("x")) == "RECOVERED"
